@@ -1,6 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-    baseURL: 'https://master.finish-worker.ru/api/',
-
+    baseURL: 'http://193.124.114.46:3001',
 });

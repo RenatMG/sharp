@@ -1,12 +1,20 @@
-.HomePage {
+.home {
   display: flex;
   align-items: center;
   justify-content: center;
   background: #1c92d2;
   background: linear-gradient(to right, #f2fcfe, #1c92d2);
   height: 100vh;
+  flex-direction: column;
 
   &__btn {
       background-color: #1c92d2!important;
+  }
+
+  &__logo{
+    fill: #fff;
+    width: 100px;
+    height: 100px;
+    margin: 30px;
   }
 }

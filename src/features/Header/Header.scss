@@ -1,7 +1,28 @@
-.Header {
-  &__links {
-    .active {
-      color: lightgray;
+.header {
+  &__logo {
+    display: flex;
+    align-items: center;
+  }
+
+
+  &__link {
+    transition: .5s ease-out;
+    cursor: pointer;
+    padding: .2rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.active {
+      border: 1px solid #fff;
+    }
+
+    &:hover {
+      opacity: .5;
     }
   }
+
+
 }

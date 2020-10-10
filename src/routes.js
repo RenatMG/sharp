@@ -1,14 +1,27 @@
 import React from 'react';
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, withRouter} from 'react-router-dom'
+
+
+import {Home} from "./pages";
+
+import Header from "./components/Header/Header";
+
 
 
 const Routes = () => {
     return (
-        <Switch>
-            <Route path={'/'} component={Auth}/>
+        <>
+            <Route path={'/'} exact component={Home}/>
+            <Route path='/(.+)' render={() => (
+                <>
+                    <Header/>
+                    <Switch>
 
-        </Switch>
-    );
+                    </Switch>
+                </>
+            )}/>
+        </>
+    )
 };
 
-export default Routes;
+export default withRouter(Routes);

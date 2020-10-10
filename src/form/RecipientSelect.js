@@ -1,24 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import Button from "@material-ui/core/Button";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {useDispatch, useSelector} from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
-import {fetchUserlist, setTransactionProperty} from "../../store/actions/transactionActions";
+import {fetchTransactionUserList, resetTransactionUserList} from "../store/actions/transactionActions";
+import {getTransactionLoading, getTransactionUserList} from "../store/selectors";
 
-const RecipientSelect = () => {
+
+const RecipientSelect = ({
+    input, name, label, meta: {touched, error},
+    ...custom
+}) => {
 
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = useState([]);
     const [filter, setFilter] = useState('');
 
-    const {userList, loading} = useSelector(state => state.transaction);
+    const loading = useSelector(getTransactionLoading);
+    const userList = useSelector(getTransactionUserList);
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (filter) {
+                dispatch(resetTransactionUserList());
             const delaySearch = setTimeout(() => {
-                dispatch(fetchUserlist(filter));
+                dispatch(fetchTransactionUserList(filter));
             }, 500);
             return () => {
                 clearTimeout(delaySearch)
@@ -27,20 +33,21 @@ const RecipientSelect = () => {
     }, [filter, dispatch]);
 
     useEffect(() => {
-        if (filter) {
-            setOptions(userList);
-        }
-    }, [userList, filter]);
+        setOptions(userList);
+    }, [userList]);
 
-    const selectHandler = (e, value) => {
-        dispatch(setTransactionProperty('recipient', value));
+    const changeHandler = (evt, value) => {
+        if (value) {
+            input.onChange(value.name);
+            setFilter('')
+        }
     };
 
     return (
         <div>
             <Autocomplete
-                id="recipient"
-                style={{width: 300, height: 400}}
+                id={name}
+                key={!!options.length}
                 open={open}
                 onOpen={() => {
                     setOpen(true);
@@ -52,20 +59,23 @@ const RecipientSelect = () => {
                 getOptionLabel={(option) => option.name}
                 options={options}
                 loading={loading}
-                onChange={selectHandler}
-                noOptionsText={'No recipients'}
+                onChange={changeHandler}
+                noOptionsText={custom.noOptionsText}
+                clearOnEscape={true}
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Recipient"
+                        label={label}
+                        error={touched && !!error}
                         onChange={(e) => setFilter(e.target.value)}
+                        helperText={custom.helperText}
                         InputProps={{
                             ...params.InputProps,
                             endAdornment: (
-                                <React.Fragment>
-                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
+                                <>
+                                    {loading ? <CircularProgress color="primary" size={20}/> : null}
                                     {params.InputProps.endAdornment}
-                                </React.Fragment>
+                                </>
                             ),
                         }}
                     />

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Coins = (props) => {
+const CoinsIcon = (props) => {
     return (
         <svg {...props}
              viewBox="0 0 502.4 502.4">
@@ -34,4 +34,4 @@ const Coins = (props) => {
     );
 };
 
-export default Coins;
+export default CoinsIcon;

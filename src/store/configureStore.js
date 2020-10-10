@@ -1,13 +1,12 @@
-import {createStore, applyMiddleware, compose} from 'redux';
-import rootReducer from "../reducers/rootReducer";
-import reduxThunk from 'redux-thunk'
+import {createStore, applyMiddleware} from 'redux';
 
-const composeEnhancers =
-    typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose;
+import { composeWithDevTools } from 'redux-devtools-extension';
+import reduxThunk from 'redux-thunk'
+// import logger from 'redux-logger';
+
+import rootReducer from "./rootReducer";
 
 export const configureStore = () => {
-    const store = createStore(rootReducer, composeEnhancers(applyMiddleware(reduxThunk)));
-    return store;
-}
+    // return  createStore(rootReducer, composeWithDevTools(applyMiddleware(reduxThunk, logger)))
+    return  createStore(rootReducer, composeWithDevTools(applyMiddleware(reduxThunk)))
+};
