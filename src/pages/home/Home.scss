@@ -1,0 +1,12 @@
+.HomePage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1c92d2;
+  background: linear-gradient(to right, #f2fcfe, #1c92d2);
+  height: 100vh;
+
+  &__btn {
+      background-color: #1c92d2!important;
+  }
+}
