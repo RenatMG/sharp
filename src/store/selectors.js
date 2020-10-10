@@ -56,9 +56,8 @@ export function getTransactionBalance(state) {
 }
 
 export function getTransactionHistory(state) {
-    return getTransactionState(state).history
+       return getTransactionState(state).history
 }
-
 
 // re-selectors
 export const getUserBalance = createSelector([getTransactionBalance, getUserInfoBalance], (tBalance, uBalance) => {

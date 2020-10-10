@@ -39,7 +39,6 @@ const RecipientSelect = ({
     const changeHandler = (evt, value) => {
         if (value) {
             input.onChange(value.name);
-            setFilter('')
         }
     };
 
@@ -62,6 +61,7 @@ const RecipientSelect = ({
                 onChange={changeHandler}
                 noOptionsText={custom.noOptionsText}
                 clearOnEscape={true}
+                value={filter}
                 renderInput={(params) => (
                     <TextField
                         {...params}

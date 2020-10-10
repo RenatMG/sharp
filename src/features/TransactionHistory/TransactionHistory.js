@@ -18,12 +18,14 @@ const TransactionHistory = () => {
         dispatch(fetchTransactionHistory())
     }, [balance, dispatch]);
 
+  //  console.log(history)
+
     return (
         <>
             <Typography variant='h5' className='py-3 text-center'>
                 History of transactions
             </Typography>
-            <Paper className='TransactionHistory'>
+            <Paper className='TransactionHistory py-3'>
                 <List>
                     {
                         history.map(item => {
