@@ -1,88 +1,123 @@
-import React, {useEffect, useState} from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, {useEffect, useRef, useState} from 'react';
+
 import {useDispatch, useSelector} from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
-import {fetchTransactionUserList, resetTransactionUserList} from "../store/actions/transactionActions";
+import {fetchTransactionUserList} from "../store/actions/transactionActions";
 import {getTransactionLoading, getTransactionUserList} from "../store/selectors";
 
-
 const RecipientSelect = ({
+
     input, name, label, meta: {touched, error},
     ...custom
 }) => {
 
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = useState([]);
-    const [filter, setFilter] = useState('');
+    const [query, setQuery] = useState('');
+    const selectWrapperRef = useRef(null);
+
 
     const loading = useSelector(getTransactionLoading);
     const userList = useSelector(getTransactionUserList);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (filter) {
-                dispatch(resetTransactionUserList());
+        if (query) {
             const delaySearch = setTimeout(() => {
-                dispatch(fetchTransactionUserList(filter));
+                dispatch(fetchTransactionUserList(query));
+
             }, 500);
             return () => {
                 clearTimeout(delaySearch)
             }
         }
-    }, [filter, dispatch]);
+    }, [query, dispatch]);
 
     useEffect(() => {
+        if (userList.length) {
+            setOpen(true);
+        }
         setOptions(userList);
     }, [userList]);
 
-    const changeHandler = (evt, value) => {
-        if (value) {
-            input.onChange(value.name);
+
+    useEffect(() => {
+        if (!query) {
+            input.onChange('')
+            setOptions([])
+            setOpen(false)
         }
+    }, [query, input]);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', closeDropDownHandler)
+        return () => {
+            document.removeEventListener('mousedown', closeDropDownHandler)
+        }
+    }, []);
+
+    const closeDropDownHandler = event => {
+        const {current: wrap} = selectWrapperRef;
+        if (wrap && !wrap.contains(event.target)) {
+            setOpen(false)
+        }
+    }
+
+
+    const setSearchResult = result => {
+        setQuery(result)
+        setOpen(false)
+        setOptions([]);
+        input.onChange(result);
     };
 
+    // const searchOnChangeHandler = (query) => {
+    //     setQuery(query);
+    //     setOpen(true);
+    // };
+
+
     return (
-        <div>
-            <Autocomplete
-                id={name}
-                key={!!options.length}
-                open={open}
-                onOpen={() => {
-                    setOpen(true);
+        <div ref={selectWrapperRef}>
+            <TextField
+                className='w-100'
+                value={query}
+                label={label}
+                placeholder={label}
+                error={touched && !!error}
+                helperText={touched && error}
+                onClick={() => setOpen(!open)}
+                onChange={(e) => setQuery(e.target.value)}
+                InputProps={{
+                    endAdornment: (
+                        <>
+                            {!loading ? <CircularProgress color="primary" size={20}/> : null}
+                        </>
+                    ),
                 }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                getOptionSelected={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                options={options}
-                loading={loading}
-                onChange={changeHandler}
-                noOptionsText={custom.noOptionsText}
-                clearOnEscape={true}
-                value={filter}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        error={touched && !!error}
-                        onChange={(e) => setFilter(e.target.value)}
-                        helperText={custom.helperText}
-                        InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                                <>
-                                    {loading ? <CircularProgress color="primary" size={20}/> : null}
-                                    {params.InputProps.endAdornment}
-                                </>
-                            ),
-                        }}
-                    />
-                )}
+                name={name}
             />
+
+
+            {
+                open &&
+                <div>
+                    {
+                        options.map(option => {
+                            return (
+                                <div tabIndex={0} onClick={() => setSearchResult(option.name)}
+                                     key={option.id}>{option.name}</div>)
+                        })
+                    }
+                </div>
+            }
+
         </div>
-    );
+    )
+
+
 };
 
 export default RecipientSelect;
+
