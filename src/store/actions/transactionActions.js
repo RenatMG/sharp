@@ -108,3 +108,9 @@ export function resetTransactionUserList() {
         dispatch(setTransactionProperty('userList', []))
     }
 }
+
+export function resetTransactionPayment() {
+    return dispatch => {
+        dispatch(setTransactionProperty('payment', {}))
+    }
+}

@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 
 import FormControlGroup from "./FormControlGroup";
 import {validateTransaction as validate} from "./validators";
-import RecipientSelect from "./RecipientSelect";
+import FormSelectAutoComplete from "./FormSelectAutoComplete";
 
 
 const FormTransactions = (props) => {
@@ -25,7 +25,8 @@ const FormTransactions = (props) => {
                                placeholder='name'
                                helperText="Please start enter recipient's name"
                                noOptionsText='No recipients'
-                               component={RecipientSelect}/>
+                               className={'form_autocomplete'}
+                               component={FormSelectAutoComplete}/>
                         <Field name='amount'
                                label='Please enter amount'
                                placeholder='amount'

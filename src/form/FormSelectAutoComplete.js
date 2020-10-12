@@ -1,102 +1,122 @@
-import React, {useEffect, useState} from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, {useEffect, useRef, useState} from 'react';
+
 import {useDispatch, useSelector} from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TextField from "@material-ui/core/TextField";
-import {fetchTransactionUserList, resetTransactionUserList} from "../store/actions/transactionActions";
+import {fetchTransactionUserList} from "../store/actions/transactionActions";
 import {getTransactionLoading, getTransactionUserList} from "../store/selectors";
+import {useTransaction} from "../pages/personal/context/transactionContext";
 
-
-const FormSelectAutoComplete = ({
-    input, name, label, meta: {touched, error},
-    ...custom
-}) => {
-
+const FormSelectAutoComplete = (props) => {
+    const {input, name, label, meta: {touched, error}, className} = props;
     const [open, setOpen] = React.useState(false);
     const [options, setOptions] = useState([]);
-    const [filter, setFilter] = useState('');
-    //const [value, setValue] = useState('');
+    const [query, setQuery] = useState('');
+    const [startSearch, setStartSearch] = useState(false);
+    const selectWrapperRef = useRef(null);
+
+    const {setResetForm, resetForm} = useTransaction();
 
     const loading = useSelector(getTransactionLoading);
     const userList = useSelector(getTransactionUserList);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (filter) {
-            dispatch(resetTransactionUserList());
+        if (query && startSearch) {
             const delaySearch = setTimeout(() => {
-                dispatch(fetchTransactionUserList(filter));
+                dispatch(fetchTransactionUserList(query));
+
             }, 500);
             return () => {
                 clearTimeout(delaySearch)
             }
         }
-    }, [filter, dispatch]);
+    }, [query, startSearch, dispatch]);
 
     useEffect(() => {
+        if (userList.length) {
+            setOpen(true);
+        }
         setOptions(userList);
     }, [userList]);
 
-    const onChangeHandler = (evt, value) => {
-        if (value) {
-            input.onChange(value.name);
-         //   setValue(value.name);
-         //   setFilter('');
+
+    useEffect(() => {
+        if (!query && selectWrapperRef.current.querySelector('input') === document.activeElement) {
+            console.log('clear')
+            input.onChange('');
+            setOptions([]);
+            setOpen(false);
         }
-    };
-    const onInputChangeHandler = (e, value) => {
-        if (value) {
-     //       setValue(value);
-            // setFilter('');
+    }, [query, input]);
+
+    useEffect(() => {
+        document.addEventListener('mousedown', closeDropDownHandler);
+        return () => {
+            document.removeEventListener('mousedown', closeDropDownHandler)
+        }
+    }, []);
+
+    const closeDropDownHandler = event => {
+        const {current: wrap} = selectWrapperRef;
+        if (wrap && !wrap.contains(event.target)) {
+            setOpen(false)
         }
     };
 
+    const setSearchResult = result => {
+        setQuery(result);
+        setOpen(false);
+        setStartSearch(false);
+        input.onChange(result);
+    };
+
+    const setQueryHandler = (value) => {
+        setResetForm(false);
+        setQuery(value);
+        setStartSearch(true)
+    };
 
     return (
-        <div>
-            <Autocomplete
-                id={name}
-                key={!!options.length}
-                loading={loading}
-                open={open}
-                onOpen={() => {
-                    setOpen(true);
+        <div ref={selectWrapperRef} className={className}>
+            <TextField
+                className='w-100'
+                value={resetForm ? '' : query || input.value}
+                label={label}
+                placeholder={label}
+                error={touched && !!error}
+                helperText={touched && error}
+                onClick={() => setOpen(!!options.length)}
+                onChange={(e) => setQueryHandler(e.target.value)}
+                InputProps={{
+                    endAdornment: (
+                        <>
+                            {loading ? <CircularProgress color="primary" size={20}/> : null}
+                        </>
+                    ),
                 }}
-                onClose={() => {
-                    setOpen(false);
-                }}
-                getOptionSelected={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                noOptionsText={custom.noOptionsText}
-                onChange={onChangeHandler}
-                onInputChange={onInputChangeHandler}
-                // inputValue={value || filter}
-                options={options}
-                clearOnEscape
-// value={value || null}
-                onCl
-          //      inputValue={value||filter}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={label}
-                        error={touched && !!error}
-                        onChange={(e) => setFilter(e.target.value)}
-                        helperText={custom.helperText}
-                        InputProps={{
-                            ...params.InputProps,
-                            endAdornment: (
-                                <>
-                                    {loading ? <CircularProgress color="primary" size={20}/> : null}
-                                    {params.InputProps.endAdornment}
-                                </>
-                            ),
-                        }}
-                    />
-                )}
+                name={name}
             />
+
+
+            {
+                open &&
+                <div className={`${className}__list`}>
+                    {
+                        options.map(option => {
+                            return (
+                                <div tabIndex="0" onClick={() => setSearchResult(option.name)}
+                                     key={option.id}>{option.name}</div>)
+                        })
+                    }
+                </div>
+            }
+
         </div>
-    );
+    )
+
+
 };
 
 export default FormSelectAutoComplete;
+

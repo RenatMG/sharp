@@ -3,9 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {fetchUserInfo, logOutUser} from "../../store/actions/userActions";
 import {Page} from "../../layouts";
-import {fetchTransactionHistory} from "../../store/actions/transactionActions";
 import {getUserError, getUserId} from "../../store/selectors";
 import {TransactionCreator, TransactionHistory} from "../../features";
+import TransactionContextProvider from "./context/transactionContext";
 
 
 const Personal = ({history}) => {
@@ -17,8 +17,6 @@ const Personal = ({history}) => {
     useEffect(() => {
         if (!userId) {
             dispatch(fetchUserInfo())
-        } else {
-            dispatch(fetchTransactionHistory())
         }
     }, [dispatch, userId]);
 
@@ -32,18 +30,20 @@ const Personal = ({history}) => {
     const title = 'Personal';
 
     return (
-        <Page title={title}>
-            <div className='container-lg'>
-                <div className="row">
-                    <div className="col-12 col-sm-6 d-flex flex-column py-5">
-                        <TransactionCreator/>
-                    </div>
-                    <div className="col-12 col-sm-6 d-flex flex-column py-5">
-                        <TransactionHistory/>
+        <TransactionContextProvider>
+            <Page title={title}>
+                <div className='container-lg'>
+                    <div className="row">
+                        <div className="col-12 col-sm-6 d-flex flex-column py-5">
+                            <TransactionCreator/>
+                        </div>
+                        <div className="col-12 col-sm-6 d-flex flex-column py-5">
+                            <TransactionHistory/>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Page>
+            </Page>
+        </TransactionContextProvider>
     );
 };
 
