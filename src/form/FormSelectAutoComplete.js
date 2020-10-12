@@ -43,12 +43,18 @@ const FormSelectAutoComplete = (props) => {
 
     useEffect(() => {
         if (!query && selectWrapperRef.current.querySelector('input') === document.activeElement) {
-            console.log('clear')
             input.onChange('');
             setOptions([]);
             setOpen(false);
         }
     }, [query, input]);
+
+    useEffect(()=>{
+        if(input.value){
+            setQuery(input.value)
+        }
+    }, [input]);
+
 
     useEffect(() => {
         document.addEventListener('mousedown', closeDropDownHandler);
