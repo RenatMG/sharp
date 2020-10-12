@@ -59,6 +59,7 @@ const TransactionHistory = () => {
     }, [history, sort]);
 
     useEffect(() => {
+        setSort('byDateIncrease');
         if (listRef.current) {
             listRef.current.scrollTo({
                 top: 0,
