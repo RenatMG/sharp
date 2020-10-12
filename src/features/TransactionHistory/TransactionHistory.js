@@ -24,7 +24,7 @@ const TransactionHistory = () => {
     const {setResetForm} = useTransaction();
 
     useEffect(() => {
-console.log(sort)
+
         let historyList = [...history];
         if (sort === 'byDateIncrease') {
             historyList = [...history].reverse()
