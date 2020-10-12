@@ -1,5 +1,8 @@
 .TransactionHistory {
   height: 400px;
+  @media screen and (max-width: 575px) {
+    height: 300px;
+  }
 
   &__list {
     overflow-y: auto;
@@ -31,14 +34,22 @@
       border-bottom: 1px solid rgba(0, 0, 0, .1);
       cursor: pointer;
       transition: .3s ease-out;
-      &:hover{
-        background-color: rgba(0,0,0,.1);
+
+      &:hover {
+        background-color: rgba(0, 0, 0, .1);
       }
     }
   }
-  &__text-main{
+
+  &__text-main {
     font-weight: 500;
   }
 
+  &__text {
+
+    @media screen and (max-width: 575px) {
+      font-size: .6rem!important;
+    }
+  }
 
 }

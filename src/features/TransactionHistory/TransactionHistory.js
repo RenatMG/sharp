@@ -77,7 +77,7 @@ const TransactionHistory = () => {
 
     const setRecipientValues = ({username, amount}) => {
         setResetForm(false);
-        dispatch(change('transactions', 'name', username))
+        dispatch(change('transactions', 'name', username));
         dispatch(change('transactions', 'amount', Math.abs(amount)))
     };
 
@@ -112,21 +112,21 @@ const TransactionHistory = () => {
 
                         <div className='mt-4 d-flex justify-content-between'>
                             <Button onClick={() => setSort(sort === 'byNameAZ' ? 'byNameZA' : 'byNameAZ')}>
-                                <Typography variant='overline'>
+                                <Typography className='TransactionHistory__text' variant='overline'>
                                     by name&nbsp;
                                     {sort === 'byNameAZ' ? 'Z - A' : 'A - Z'}
                                 </Typography>
                             </Button>
                             <Button
                                 onClick={() => setSort(sort === 'byDateDecrease' ? 'byDateIncrease' : 'byDateDecrease')}>
-                                <Typography variant='overline'>
+                                <Typography className='TransactionHistory__text' variant='overline'>
                                     by date&nbsp;
                                     {sort === 'byDateDecrease' ? 'increase' : 'decrease'}
                                 </Typography>
                             </Button>
                             <Button
                                 onClick={() => setSort(sort === 'byAmountIncrease' ? 'byAmountDecrease' : 'byAmountIncrease')}>
-                                <Typography variant='overline'>
+                                <Typography className='TransactionHistory__text' variant='overline'>
                                     by amount&nbsp;
                                     {sort === 'byAmountIncrease' ? 'decrease' : 'increase'}
                                 </Typography>

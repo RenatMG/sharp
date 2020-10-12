@@ -15,12 +15,24 @@
     align-items: center;
     justify-content: center;
 
+    @media screen and (max-width: 575px) {
+      padding: .2rem .6rem;
+    }
+
     &.active {
       border: 1px solid #fff;
     }
 
     &:hover {
       opacity: .5;
+    }
+
+  }
+
+  &__text {
+    @media screen and (max-width: 575px) {
+      font-size: .75rem !important;
+
     }
   }
 

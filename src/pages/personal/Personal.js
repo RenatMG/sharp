@@ -34,10 +34,10 @@ const Personal = ({history}) => {
             <Page title={title}>
                 <div className='container-lg'>
                     <div className="row">
-                        <div className="col-12 col-sm-6 d-flex flex-column py-5">
+                        <div className="col-12 col-sm-6 d-flex flex-column py-3 py-sm-5">
                             <TransactionCreator/>
                         </div>
-                        <div className="col-12 col-sm-6 d-flex flex-column py-5">
+                        <div className="col-12 col-sm-6 d-flex flex-column py-3 py-sm-5">
                             <TransactionHistory/>
                         </div>
                     </div>
